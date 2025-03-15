@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hujjat Saqlash</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 50%;
+        }
+        h2 {
+            color: #ff3b3b;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        form p {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        input, textarea, select {
+            width: 90%;
+            padding: 12px;
+            border: 2px solid #ff3b3b;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease-in-out;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #ff8c00;
+            box-shadow: 0px 0px 8px rgba(255, 140, 0, 0.5);
+            outline: none;
+        }
+        button {
+            background: linear-gradient(90deg, #ff3b3b, #ff8c00);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #ff8c00, #ff3b3b);
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <h2>Faylni Saqlash</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">📂 Saqlash</button>
+        </form>
+    </div>
+</body>
+</html>

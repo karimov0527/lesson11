@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to {{ user.first_name }}</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: linear-gradient(90deg, #ff8c00, #ff3b3b);
+            color: white;
+            padding: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #ff3b3b;
+            font-size: 20px;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        nav ul li a:hover {
+            color: #ff8c00;
+        }
+        .auth-links {
+            margin-left: auto;
+            display: flex;
+        }
+        .container {
+            margin: 50px auto;
+            max-width: 900px;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            text-align: center;
+        }
+        .product {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .product img {
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+        .product-details {
+            text-align: left;
+        }
+        .product h3 {
+            margin: 0;
+            color: #ff3b3b;
+        }
+        .product p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .pagination a {
+            margin: 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            background: #ff3b3b;
+            color: white;
+            border-radius: 5px;
+        }
+        .pagination a:hover {
+            background: #ff8c00;
+        }
+        .search-form {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    .search-form input {
+        width: 60%;
+        padding: 12px;
+        border: 2px solid #ff3b3b;
+        border-radius: 25px;
+        font-size: 18px;
+        outline: none;
+        transition: all 0.3s ease-in-out;
+    }
+    .search-form input:focus {
+        border-color: #ff8c00;
+        box-shadow: 0px 0px 8px rgba(255, 140, 0, 0.5);
+    }
+    .search-form button {
+        padding: 12px 20px;
+        border: none;
+        background: linear-gradient(90deg, #ff8c00, #ff3b3b);
+        color: white;
+        font-size: 18px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-left: 10px;
+        transition: background 0.3s ease-in-out;
+    }
+    .search-form button:hover {
+        background: linear-gradient(90deg, #ff3b3b, #ff8c00);
+    }
+    </style>
+</head>
+<body>
+    <header>
+        Welcome to {{ user.first_name }}'s Beverage Store 🍹
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="{% url 'list' %}">Our Drinks</a></li>
+            <li><a href="{% url 'home' %}">🏠 Home</a></li>
+
+        </ul>
+        <ul class="auth-links">
+            
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'add-product' %}">Add</a></li>
+                <li><a href="{% url 'account:logout' %}">Logout</a></li>
+                <li><a href="{% url 'account:profile' %}">Profile</a></li>
+                
+            {% else %}
+                <li><a href="{% url 'account:login' %}">Login</a></li>
+                <li><a href="{% url 'account:register' %}">Sign Up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <form method="GET" action="{% url 'list' %}" class="search-form">
+        <input type="text" name="q" placeholder="🔍 Ichimlik nomini kiriting..." value="{{ request.GET.q }}">
+        <button type="submit">Qidirish</button>
+    </form>
+    
+    
+    <div class="container">
+        
+        
+        {% for water in page_obj %}
+            <div class="product">
+                <a href="{% url 'detail' water.id %}" style="text-decoration: none; color: inherit;">
+                    {% if water.image %}
+                        <img src="{{ water.image.url }}" alt="{{ water.name }}">
+                    {% endif %}
+                    <div class="product-details">
+                        <h3>{{ water.name }}</h3>
+                        <p><strong>Volume:</strong> {{ water.volume }} l</p>
+                        <p><strong>Price:</strong> {{ water.price }}</p>
+                        <p><strong>Available:</strong> {{ water.quantity }} units</p>
+                        <p>{{ water.description }}</p>
+                    </div>
+                </a>
+            </div>
+        
+        {% endfor %}
+        
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; First</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="pagination">
+        <h2>Discover Refreshing Beverages</h2>
+        <p>We offer a variety of soft drinks, energy drinks, and premium beverages to keep you refreshed.</p>
+        <p>Check out our <a href="{% url 'list' %}">product list</a> to find your favorite drink.</p>
+    </div>
+    
+</body>
+</html>
